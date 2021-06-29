@@ -1,4 +1,8 @@
 buildscript {
+    val kotlin_version: String by project
+    extra.apply {
+        set("kotlin_version", kotlin_version)
+    }
     repositories {
         mavenLocal()
         mavenCentral()
@@ -8,15 +12,12 @@ buildscript {
     }
 
     dependencies {
+        classpath(kotlin("gradle-plugin", rootProject.extra["kotlin_version"].toString()))
     }
 }
 
-plugins {
-    kotlin("jvm") version "1.5.10"
-}
 
 allprojects{
-    apply(plugin = "org.jetbrains.kotlin.jvm")
     repositories {
         mavenLocal()
         mavenCentral()

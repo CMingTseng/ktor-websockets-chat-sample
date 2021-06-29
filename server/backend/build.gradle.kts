@@ -1,3 +1,6 @@
+plugins {
+    kotlin("jvm")
+}
 group = "com.jetbrains.handson"
 version = "1.0-SNAPSHOT"
 
