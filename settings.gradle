@@ -1,2 +1,4 @@
 rootProject.name = 'chat-app-websockets'
-
+include ':server:backend'
+//include ':backend'
+//project(":backend").projectDir = file("./server/backend")
