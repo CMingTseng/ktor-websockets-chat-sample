@@ -1,14 +1,6 @@
-plugins {
-    kotlin("jvm") version "1.4.10"
-}
 
 group = "com.jetbrains.handson"
 version = "1.0-SNAPSHOT"
-
-repositories {
-    jcenter()
-    mavenCentral()
-}
 
 val ktor_version: String by project
 

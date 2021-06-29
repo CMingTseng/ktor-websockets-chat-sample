@@ -15,7 +15,7 @@ plugins {
     kotlin("jvm") version "1.5.10"
 }
 
-subprojects{
+allprojects{
     apply(plugin = "org.jetbrains.kotlin.jvm")
     repositories {
         mavenLocal()
