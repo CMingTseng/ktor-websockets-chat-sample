@@ -1,7 +1,10 @@
 buildscript {
     val kotlin_version: String by project
+    val ktor_version: String by project
     extra.apply {
+        set("android_gradle_plugin_version", "4.1.2")
         set("kotlin_version", kotlin_version)
+        set("ktor_version", ktor_version)
     }
     repositories {
         mavenLocal()
@@ -12,6 +15,7 @@ buildscript {
     }
 
     dependencies {
+        classpath("com.android.tools.build:gradle:${rootProject.extra["android_gradle_plugin_version"].toString()}")
         classpath(kotlin("gradle-plugin", rootProject.extra["kotlin_version"].toString()))
     }
 }

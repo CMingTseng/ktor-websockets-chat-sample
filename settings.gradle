@@ -4,3 +4,5 @@ include ':server:backend'
 //project(":backend").projectDir = file("./server/backend")
 include ':client'
 project(":client").projectDir = file("./client/gui_mode")
+include ':android'
+project(":android").projectDir = file("./client/android")
