@@ -3,13 +3,21 @@ plugins {
     id("kotlin-android")
     id("kotlin-kapt")
 }
-
+//Ref : https://github.com/jaredsburrows/android-gif-example/blob/master/app/build.gradle.kts
 android {
     compileSdkVersion(30)
     buildToolsVersion("30.0.3")
     buildFeatures.viewBinding = true
     lintOptions {
         isIgnoreTestSources = true
+        textReport = false
+        textOutput("stdout")
+        isCheckAllWarnings = false
+        isWarningsAsErrors = false
+//        lintConfig = file("../config/lint/lint.xml")
+        isCheckReleaseBuilds = false
+        isCheckTestSources = true
+        isAbortOnError = false
     }
     defaultConfig {
         applicationId = "org.nosemaj.wsreader"
@@ -17,6 +25,9 @@ android {
         targetSdkVersion(30)
         versionCode = 1
         versionName = "1.0"
+        buildConfigField("String", "websocket_url", "\"wss://192.168.43.74:8080/chat\"")
+//        buildConfigField("String", "websocket_url", if (rootProject.extra["ci"] as Boolean) "\"http://localhost:8080\"" else "\"wss://APP_ID.execute-api.REGION.amazonaws.com/STAGE\"")
+        buildConfigField("boolean", "isDebuggable", false.toString())
         testInstrumentationRunner = "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
