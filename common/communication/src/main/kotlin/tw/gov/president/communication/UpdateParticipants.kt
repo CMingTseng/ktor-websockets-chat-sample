@@ -5,6 +5,4 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 @SerialName("action")
-data class CommunicationPack(
-     val author: String = "",val text: String = ""
-):Event(Action.SEND_MESSAGE)
+data class UpdateParticipants(val participants: Set<String>) : Event(Action.PARTICIPANTS_UPDATE)

@@ -6,24 +6,47 @@ import io.ktor.http.*
 import io.ktor.http.cio.websocket.*
 import io.ktor.util.*
 import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.Flow
 import tw.gov.president.communication.CommunicationPack
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.*
-import tw.gov.president.communication.Action
+import tw.gov.president.communication.JoinChat
 
+var author = "Defualt_Client"
 suspend fun DefaultClientWebSocketSession.outputMessages() {
     try {
         for (message in incoming) {
             message as? Frame.Text ?: continue
             val receivedText = message.readText()
 //            println(receivedText)
-            val cp = Json.decodeFromString<CommunicationPack>(receivedText)
-            if (cp.action == Action.SEND_MESSAGE.action_name) {
-                println(cp.data)
-            } else {
+//            //FIXME fail Event Polymorphic serializer was not found for missing class discriminator ('null')
+//            val event = Json{
+//                ignoreUnknownKeys = true
+//                isLenient = true
+//                prettyPrint = true
+//                allowStructuredMapKeys = true
+//                encodeDefaults = true
+//                classDiscriminator = "action"
+//            }.decodeFromString<Event>(receivedText)
+//            println("Show Client get received Text event : $event ")
+            //FIXME !!!
+            try {
+                val cp = Json.decodeFromString<CommunicationPack>(receivedText)
+                author = cp.author
+                val text = cp.text
+                println("$author say : $text")
+            } catch (e: Exception) {
+                try {
+                    val jo = Json.decodeFromString<JoinChat>(receivedText)
+                    //                    println("Show Client get JoinChat  : $jo  ")
+                    author = jo.author
+                    val previousMessages = jo.previousMessages
+                    previousMessages.forEach {
+                        println("$author say : ${it.text}")
+                    }
+                } catch (e: Exception) {
 
+                }
             }
         }
     } catch (e: Exception) {
@@ -36,7 +59,7 @@ suspend fun DefaultClientWebSocketSession.inputMessages() {
         val message = readLine() ?: ""
         if (message.equals("exit", true)) return
         try {
-            val communicationpack = CommunicationPack(Action.SEND_MESSAGE.action_name, message)
+            val communicationpack = CommunicationPack(author, message)
             send(Json.encodeToString(communicationpack))
         } catch (e: Exception) {
             println("Error while sending: " + e.localizedMessage)

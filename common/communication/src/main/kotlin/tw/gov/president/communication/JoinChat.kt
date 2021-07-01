@@ -5,6 +5,5 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 @SerialName("action")
-data class CommunicationPack(
-     val author: String = "",val text: String = ""
-):Event(Action.SEND_MESSAGE)
+data class JoinChat(  val previousMessages: ArrayList<CommunicationPack>,
+                      val author: String = "") : Event(Action.JOIN_CHAT)
