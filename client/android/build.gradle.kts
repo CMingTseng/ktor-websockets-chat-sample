@@ -2,6 +2,7 @@ plugins {
     id("com.android.application")
     id("kotlin-android")
     id("kotlin-kapt")
+    kotlin("plugin.serialization")
 }
 //Ref : https://github.com/jaredsburrows/android-gif-example/blob/master/app/build.gradle.kts
 android {
@@ -25,7 +26,7 @@ android {
         targetSdkVersion(30)
         versionCode = 1
         versionName = "1.0"
-        buildConfigField("String", "websocket_url", "\"wss://192.168.43.74:8080/chat\"")
+        buildConfigField("String", "websocket_url", "\"ws://192.168.43.74:8080/chat\"")
 //        buildConfigField("String", "websocket_url", if (rootProject.extra["ci"] as Boolean) "\"http://localhost:8080\"" else "\"wss://APP_ID.execute-api.REGION.amazonaws.com/STAGE\"")
         buildConfigField("boolean", "isDebuggable", false.toString())
         testInstrumentationRunner = "android.support.test.runner.AndroidJUnitRunner"
@@ -77,4 +78,7 @@ dependencies {
     implementation("io.ktor:ktor-client-okhttp:${project.extra["ktor_version"].toString()}")
 
     implementation("org.conscrypt:conscrypt-android:2.5.1")
+
+    implementation(project(":communication"))
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:${project.extra["serialization_version"].toString()}")
 }

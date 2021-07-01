@@ -5,6 +5,7 @@ buildscript {
         set("android_gradle_plugin_version", "4.1.2")
         set("kotlin_version", kotlin_version)
         set("ktor_version", ktor_version)
+        set("serialization_version", "1.2.1")
     }
     repositories {
         mavenLocal()
@@ -17,11 +18,11 @@ buildscript {
     dependencies {
         classpath("com.android.tools.build:gradle:${rootProject.extra["android_gradle_plugin_version"].toString()}")
         classpath(kotlin("gradle-plugin", rootProject.extra["kotlin_version"].toString()))
+        classpath(kotlin("serialization", rootProject.extra["kotlin_version"].toString()))
     }
 }
 
-
-allprojects{
+allprojects {
     repositories {
         mavenLocal()
         mavenCentral()
