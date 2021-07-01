@@ -7,7 +7,7 @@
 
     <string name="websocket_closed">WebSocket closed: %1$s</string>
     <string name="websocket_connected">WebSocket opened on %1$s</string>
-    <string name="websocket_received_message">WebSocket got message: %1$s</string>
+    <string name="websocket_received_message">WebSocket got message: %1$s say %2$s</string>
     <string name="websocket_sent_command">WebSocket sent command: %1$s</string>
 
     <string name="status_line">%1$d: %2$s\n</string>

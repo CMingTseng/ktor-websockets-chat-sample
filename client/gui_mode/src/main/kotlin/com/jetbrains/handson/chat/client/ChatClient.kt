@@ -42,7 +42,7 @@ suspend fun DefaultClientWebSocketSession.outputMessages() {
                     author = jo.author
                     val previousMessages = jo.previousMessages
                     previousMessages.forEach {
-                        println("$author say : ${it.text}")
+                        println("${it.author} say : ${it.text}")
                     }
                 } catch (e: Exception) {
 

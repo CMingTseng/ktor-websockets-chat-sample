@@ -41,12 +41,14 @@ import tw.gov.president.communication.CommunicationPack
 //import kotlinx.serialization.decodeFromString
 //import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.*
+import tw.gov.president.communication.JoinChat
 
 @ExperimentalCoroutinesApi
 class MainActivity : AppCompatActivity() {
     private lateinit var commands: Flow<String>
     private lateinit var statusWindow: TextView
     private var lineNumber = 0
+    private var author = "Defualt_Client"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -93,7 +95,7 @@ class MainActivity : AppCompatActivity() {
                     .onEach { addStatus(R.string.websocket_sent_command, it) }
                     .map { command ->
                         val communicationpack =
-                            CommunicationPack(Action.SEND_MESSAGE.action_name, command)
+                            CommunicationPack(author, command)
                         kotlinx.serialization.json.Json.encodeToString(communicationpack)
                     }
                     .collect {
@@ -102,15 +104,32 @@ class MainActivity : AppCompatActivity() {
             }, async {
                 incoming.consumeEach {
                     when (it) {
-                        is Frame.Text ->{
-                            val receivedText =it.readText()
-                            val cp = kotlinx.serialization.json.Json.decodeFromString<CommunicationPack>(receivedText)
-                            if (cp.action == Action.SEND_MESSAGE.action_name) {
-                                cp.data?.let { info ->
-                                    addStatus(R.string.websocket_received_message, info)
-                                }
-                            } else {
+                        is Frame.Text -> {
+                            val receivedText = it.readText()
+                            try {
+                                val cp =
+                                    kotlinx.serialization.json.Json.decodeFromString<CommunicationPack>(
+                                        receivedText
+                                    )
+                                author = cp.author
+                                val text = cp.text
+                                println("$author say : $text")
+                                addStatus(R.string.websocket_received_message, cp.author,cp.text)
+                            } catch (e: Exception) {
+                                try {
+                                    val jo =
+                                        kotlinx.serialization.json.Json.decodeFromString<JoinChat>(
+                                            receivedText
+                                        )
+                                    //                    println("Show Client get JoinChat  : $jo  ")
+                                    author = jo.author
+                                    val previousMessages = jo.previousMessages
+                                    previousMessages.forEach {
+                                         println("${it.author} say : ${it.text}")
+                                    }
+                                } catch (e: Exception) {
 
+                                }
                             }
                         }
                         is Frame.Close -> {
@@ -158,8 +177,8 @@ class MainActivity : AppCompatActivity() {
 //        }
     }
 
-    private fun addStatus(@StringRes resId: Int, arg: String) {
-        val status = getString(resId, arg)
+    private fun addStatus(@StringRes resId: Int, arg: String, arg2: String?="") {
+        val status = getString(resId, arg,arg2)
         val line = getString(R.string.status_line, lineNumber, status)
         statusWindow.append(line)
         lineNumber++
